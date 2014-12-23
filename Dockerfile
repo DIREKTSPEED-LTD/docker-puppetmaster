@@ -1,9 +1,7 @@
-FROM ubuntu:12.04
-MAINTAINER Arcus "http://arcus.io"
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe multiverse" > /etc/apt/sources.list
+FROM ubuntu:14.04
 RUN apt-get update
 RUN apt-get install -y wget
-RUN wget -q http://apt.puppetlabs.com/puppetlabs-release-precise.deb -O /tmp/puppetlabs.deb
+RUN wget -q http://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/puppetlabs.deb
 RUN dpkg -i /tmp/puppetlabs.deb
 RUN apt-get update
 RUN apt-get -y install puppetmaster-passenger puppet-dashboard puppetdb puppetdb-terminus redis-server supervisor openssh-server net-tools mysql-server

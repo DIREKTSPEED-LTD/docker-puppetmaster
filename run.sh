@@ -54,7 +54,4 @@ puppetdb-ssl-setup
 supervisorctl restart puppetdb
 
 # Start all the services
-supervisord -c /opt/supervisor.conf -n
-
-# run puppet agent once on the container
-puppet agent -t
+supervisord -c /opt/supervisor.conf

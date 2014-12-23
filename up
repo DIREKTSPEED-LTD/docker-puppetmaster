@@ -1,51 +1,28 @@
 #!/bin/bash
 
-docker build -t puppetmaster .
+ALREADY_RUNNING=$(docker ps | awk '$2 ~ /puppetmaster/ {print $1}')
 
-# Start the container
-CONTAINER_ID=$(docker run -P -h puppet -d puppetmaster)
-clear
-chmod 0600 sshkey
-sleep 10
+if [[ -z ${ALREADY_RUNNING} ]];then
+
+    docker build -t puppetmaster .
+    # Start the container
+    CONTAINER_ID=$(docker run -P -h puppet -d puppetmaster)
+else
+    CONTAINER_ID=${ALREADY_RUNNING}
+fi
+
 
 # Grab all the ports
-PUPPET_SSHPORT=$(docker port $CONTAINER_ID 22 | cut -d: -f2)
 PUPPET_PUPPETDBPORT=$(docker port $CONTAINER_ID 8080 | cut -d: -f2)
 PUPPET_PUPPETDBSPORT=$(docker port $CONTAINER_ID 8081 | cut -d: -f2)
-PUPPET_PUPPETDASHBOARDPORT=$(docker port $CONTAINER_ID 3000 | cut -d: -f2)
 PUPPET_PUPPETBOARDPORT=$(docker port $CONTAINER_ID 9090 | cut -d: -f2)
 
 # Show the user the ports
-echo "ssh"
-echo "# ssh -i sshkey -p $PUPPET_SSHPORT root@localhost"
 echo "puppetdb (http)"
 echo "# http://localhost:$PUPPET_PUPPETDBPORT/"
 echo "puppetdb (https)"
 echo "# https://localhost:$PUPPET_PUPPETDBSPORT/"
-echo "puppet-dashboard (http)"
-echo "# http://localhost:$PUPPET_PUPPETDASHBOARDPORT/"
 echo "puppet-board (http)"
 echo "# http://localhost:$PUPPET_PUPPETBOARDPORT/"
-sleep 20
 
-echo "Adding your public keys"
-cat ~/.ssh/id_*.pub | ssh -i sshkey -o StrictHostKeyChecking=no -p $PUPPET_SSHPORT root@localhost '/bin/cat - >> ~/.ssh/authorized_keys'
-
-if [ ! -d puppet ];then
-    git clone ssh://root@localhost:$PUPPET_SSHPORT/var/puppet.git puppet
-fi
-if [ -d puppet/.git ];then
-    cd puppet
-    echo "changing up remote puppetmaster "
-    git remote remove puppetmaster 2>&1 > /dev/null
-    git remote add puppetmaster ssh://root@localhost:$PUPPET_SSHPORT/var/puppet.git
-    cd ..
-fi
-
-(cd puppet; git push puppetmaster --all)
-
-
-# connect to the machine.
-ssh -i sshkey -o StrictHostKeyChecking=no -p $PUPPET_SSHPORT root@localhost
-
-exit 0
+docker exec -it $CONTAINER_ID bash

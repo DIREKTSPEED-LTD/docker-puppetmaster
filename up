@@ -1,15 +1,21 @@
 #!/bin/bash
 
-ALREADY_RUNNING=$(docker ps | awk '$2 ~ /puppetmaster/ {print $1}')
+ALREADY_RUNNING=$(
+    docker ps  | awk '$2 ~ /puppet_master:master/ && $0 ~ /puppetmaster/ {print $1}'
+)
 
 if [[ -z ${ALREADY_RUNNING} ]];then
 
-    docker build -t puppetmaster .
+    docker rm puppetmaster
+    docker build -t puppet_master:master .
     # Start the container
-    CONTAINER_ID=$(docker run -P -h puppet -d puppetmaster)
+    CONTAINER_ID=$(docker run -P --name puppetmaster -h puppet -d puppet_master:master)
 else
     CONTAINER_ID=${ALREADY_RUNNING}
 fi
+
+
+echo "puppetmaster is running as $CONTAINER_ID"
 
 
 # Grab all the ports

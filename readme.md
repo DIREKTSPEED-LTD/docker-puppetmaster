@@ -15,6 +15,8 @@ Everything is kept up-to-date during a build.
 * Ubuntu
 * facter
 * hiera
+* puppetmaster
+** set to autosign everything
 * puppet
 * puppetdb
 * puppetboard
@@ -24,25 +26,23 @@ Everything is kept up-to-date during a build.
 How do i play use it ?
 ----------------------
 
-```
-./up
-```
+start the puppet master
 
+    ./up
 
-How do i play use it ?
-----------------------
+Copy your puppet repo into the puppetmaster
 
-Build
+    ./copy-puppet-files ~/code/work/puppetcode
 
-```
-docker build -t puppetmaster .
-```
+Start a puppet agent to connect to your system
 
-Note: you can trigger the puppetmaster to run the puppet agent is...
+    ./start_agent
+	# puppet agent --test --server $PUPPETMASTER_PORT_8140_TCP_ADDR
 
-```
-puppet agent -t`
-```
+Start a puppet agent with a node name
+
+    ./start_agent -h hostname_of_client
+	# puppet agent --test --server $PUPPETMASTER_PORT_8140_TCP_ADDR
 
 Ports:
 ------

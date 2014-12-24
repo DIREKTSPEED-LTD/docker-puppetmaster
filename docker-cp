@@ -1,0 +1,41 @@
+#!/bin/bash -x
+
+
+function usage() {
+    cat <<EOF
+ $0 docker-cp [source-contianer:]path-to-source [destination-container:]path-to-dest
+EOF
+}
+
+
+if [[ ${#} -ne 2 ]];then
+    usage
+    exit 1
+fi
+
+SRC=${1}
+DEST=${2}
+ROOT_FS="/var/lib/docker/aufs/mnt/"
+
+SRC_DIR=$(echo $SRC |cut -d: -f2-)
+DEST_DIR=$(echo $DEST |cut -d: -f2-)
+
+if [[ $(echo ${SRC} | grep -c ':') -eq 1 ]];then
+    SRC_CONTAINER_SHORT=$(echo $SRC | cut -d: -f1)
+fi
+
+if [[ $(echo ${DEST} | grep -c ':') -eq 1 ]];then
+    DEST_CONTAINER_SHORT=$(echo $DEST | cut -d: -f1)
+fi
+
+if [[ ! -z ${SRC_CONTAINER_SHORT} ]];then
+    SRC_CONTAINER=$(docker inspect -f '{{.Id}}' ${SRC_CONTAINER_SHORT})
+    SRC_DIR="${ROOT_FS}${SRC_CONTAINER}/${SRC_DIR}"
+fi
+if [[ ! -z ${DEST_CONTAINER_SHORT} ]];then
+    DEST_CONTAINER=$(docker inspect -f '{{.Id}}' ${DEST_CONTAINER_SHORT})
+    DEST_DIR="${ROOT_FS}${DEST_CONTAINER}/${DEST_DIR}"
+fi
+
+echo "${SRC_DIR} > ${DEST_DIR}"
+sudo rsync -avz ${SRC_DIR} ${DEST_DIR}

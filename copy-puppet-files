@@ -18,16 +18,7 @@ if [[ -z ${ALREADY_RUNNING} ]];then
     exit 1
 fi
 
-CONTAINER_ID=$(docker inspect -f '{{.Id}}' ${ALREADY_RUNNING})
-
-echo "puppetmaster is running as..."
-echo "${CONTAINER_ID}"
-
-ROOT_FS="/var/lib/docker/aufs/mnt/${CONTAINER_ID}"
-PUPPETMASTER_DIR="${ROOT_FS}/etc/puppet/environments/default/"
-
-echo "sending ${PUPPET_SRC} to puppet master"
-sudo rsync -avz --progress  --exclude '.git' ${PUPPET_SRC}/ ${PUPPETMASTER_DIR} >/dev/null
+./docker-cp ${PUPPET_SRC} ${CONTAINER_ID}:/etc/puppet/environments/default/
 
 echo "restarting puppet-master"
 docker exec -it ${CONTAINER_ID} supervisorctl restart unicorn

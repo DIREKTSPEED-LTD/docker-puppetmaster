@@ -1,6 +1,6 @@
 # Puppetmaster
 
-Creates a Puppet Master running with Apache/Passenger, PuppetDB, Dashboard, and Redis (for Hiera).
+Creates a Puppet Master running with nginx/unicorn, PuppetDB, Dashboard, and Redis (for Hiera).
 
 What is this ?
 --------------

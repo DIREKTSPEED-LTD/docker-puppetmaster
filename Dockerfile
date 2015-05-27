@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 RUN apt-get update
-RUN apt-get install -y wget
+RUN apt-get install -y wget nano 
 RUN wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb -O /tmp/puppetlabs.deb
 RUN dpkg -i /tmp/puppetlabs.deb
 RUN apt-get update

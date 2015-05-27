@@ -1,3 +1,0 @@
-FROM puppetmaster:latest
-
-CMD ["puppet agent --no-daemonize --server $PUPPETMASTER_PORT_8140_TCP_ADDR --verbose"]

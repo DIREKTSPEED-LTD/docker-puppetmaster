@@ -1,5 +1,12 @@
 #!/bin/bash -x
 
+
+
+
+## TODO
+# switch to s6 init for master and agent
+# if parm 1 agent start agent puppet agent --no-daemonize --server $PUPPETMASTER_PORT_8140_TCP_ADDR --verbose
+# if parm 1 master do following
 # Turn off ipv6
 echo '1' > /proc/sys/net/ipv6/conf/lo/disable_ipv6
 echo '1' > /proc/sys/net/ipv6/conf/lo/disable_ipv6

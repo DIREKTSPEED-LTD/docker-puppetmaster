@@ -1,6 +1,0 @@
-#!/bin/bash
-
-CLIENT_ID=$(docker run -dt $@ --link puppetmaster:puppetmaster puppet_master:master bash)
-echo 'puppet agent --no-daemonize --server $PUPPETMASTER_PORT_8140_TCP_ADDR --verbose'
-docker exec -it  ${CLIENT_ID} rm -rf /var/lib/puppet/ssl
-docker exec -it  ${CLIENT_ID} bash

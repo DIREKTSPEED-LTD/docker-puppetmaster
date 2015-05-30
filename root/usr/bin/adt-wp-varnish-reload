@@ -1,0 +1,2 @@
+#!/bin/bash
+EPOCH=$(perl -e 'print time()'); varnishadm -T localhost:6082 -S /etc/varnish/secret vcl.load $EPOCH /etc/varnish/adt-wp.vcl && varnishadm -T localhost:6082 -S /etc/varnish/secret vcl.use $EPOCH

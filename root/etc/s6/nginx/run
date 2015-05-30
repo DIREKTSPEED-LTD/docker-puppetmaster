@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /etc/nginx
+. /create-nginx-sites.sh
+nginx

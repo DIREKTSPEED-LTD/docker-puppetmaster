@@ -1,0 +1,2 @@
+#!/bin/bash
+echo "php5-fpm finish script runned"
